@@ -4,12 +4,12 @@ import java.io.File
 
 fun main() {
     println("Part 1 :")
-    part1()
+    part1("./src/main/resources/day1/input.txt")
 }
-fun part1() {
+fun part1(path : String) {
     val elvesCalories = mutableListOf<Int>()
 
-    val elves = File("./src/main/resources/day1/input.txt").readText().split("\n\n")
+    val elves = File(path).readText().split("\n\n")
 
     elves.forEachIndexed { i, elf ->
         elf.split("\n").forEach { calories ->
