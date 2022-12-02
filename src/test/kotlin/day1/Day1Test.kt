@@ -3,7 +3,7 @@ package day1
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class Day1 {
+class Day1Test {
 
     @Test
     fun `test part 1`() {
