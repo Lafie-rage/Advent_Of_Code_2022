@@ -4,7 +4,7 @@ import java.io.File
 
 fun main() {
     println("Part 1 :")
-    val resultPart1 = day1.part1("./src/main/resources/day2/input.txt")
+    val resultPart1 = part1("./src/main/resources/day2/input.txt")
     println("Answer : $resultPart1")
 
     /*println("Part 2 :")
@@ -13,37 +13,50 @@ fun main() {
 }
 
 fun part1(path: String): Int {
-    val matchs = decodeFile(path)
-    return 0
-}
-
-fun decodeFile(path: String): List<Int> {
-    val result = mutableListOf<Int>()
-    File(path).readLines().forEach { match ->
+    val tournament = decodeFile(path)
+    val matchsScores = mutableListOf<Int>()
+    tournament.forEach { match ->
         match.split(" ").let {
-            result.add(decodeSingleLine(it[0][0], it[1][0]))
+            matchsScores.add(decodeSingleLine_part1(it[0][0], it[1][0]))
         }
     }
-    return result
+    return matchsScores.sum()
+}
+private fun decodeSingleLine_part1(player1Shape: Char, player2Shape: Char): Int =  shapeForOpponent(player1Shape).against(shapeForMe(player2Shape))
+
+private fun decodeFile(path: String): List<String> {
+    return File(path).readLines()
 }
 
-fun decodeSingleLine(player1Shape: Char, player2Shape: Char): Int {
-    return 0
-}
 
-enum class Shape(
-    private val player1: Char,
-    private val player2: Char,
-    val value: Int,
+private enum class Shape(
+    val score: Int,
 ) {
-    Rock('A', 'X', 1),
-    Paper('B', 'Y', 2),
-    Scissors('C', 'Z', 3),
+    Rock(1),
+    Paper(2),
+    Scissors(3)
 }
 
-fun Shape.against(shape: Shape): Int {
-    return when {
-        this == shape -> this.value
-        else -> 0
+private fun shapeForOpponent(opponentShape: Char): Shape {
+    return when (opponentShape) {
+        'A' -> Shape.Rock
+        'B' -> Shape.Paper
+        else -> Shape.Scissors
     }
 }
+
+private fun shapeForMe(myShape: Char): Shape =
+    when (myShape) {
+        'X' -> Shape.Rock
+        'Y' -> Shape.Paper
+        else -> Shape.Scissors
+    }
+
+private fun Shape.against(shape: Shape): Int =
+    when {
+        this == shape -> 3
+        this == Shape.Scissors && shape == Shape.Rock ||
+                this == Shape.Rock && shape == Shape.Paper ||
+                this == Shape.Paper && shape == Shape.Scissors -> 6
+        else -> 0
+    } + shape.score
