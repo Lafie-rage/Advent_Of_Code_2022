@@ -5,7 +5,7 @@ import java.io.File
 
 fun main() {
     println("Part 1 :")
-    val resultPart1 = part1("./src/main/resources/day2/input.txt")
+    val resultPart1 = part1("./src/main/resources/day3/input.txt")
     println("Answer : $resultPart1")
 
    /* println("Part 2 :")
@@ -14,11 +14,12 @@ fun main() {
 }
 
 fun part1(path: String): Int {
+    val commonItems = mutableListOf<Char>()
     val bags = decodeFile(path)
     bags.forEach {
-
+        commonItems.addAll(it.findCommonItems())
     }
-    return 0
+    return commonItems.sum()
 }
 
 private fun decodeFile(path: String): List<Bag> = File(path).readLines().map {
@@ -28,13 +29,25 @@ private fun decodeFile(path: String): List<Bag> = File(path).readLines().map {
         )
     }
 
-private data class Bag(
+data class Bag(
     val compart1: String,
     val compart2: String,
 ) {
-    fun findCommonItems() = {
+    fun findCommonItems(): List<Char> {
         val compart1Distinct = compart1.toList().distinct()
         val compart2Distinct = compart2.toList().distinct()
-        (compart1Distinct + compart2Distinct)
+        return (compart1Distinct + compart2Distinct).groupBy { it }.filter { it.value.size > 1}.keys.toList()
     }
+}
+
+private fun List<Char>.sum(): Int {
+    var sum = 0
+    this.forEach {
+        if(it.isLowerCase()) {
+            sum += (it - 'a' + 1)
+        } else {
+            sum += (it - 'A' + 27)
+        }
+    }
+    return sum
 }
